@@ -18,5 +18,5 @@ public class RookeryItems {
         }
     };
 
-    public static final RegistryObject<Item> LETTER = ITEMS.register("letter", () -> new LetterItem(new Item.Properties().tab(GROUP)));
+    public static final RegistryObject<Item> LETTER = ITEMS.register("letter", () -> new LetterItem(new Item.Properties().tab(GROUP).stacksTo(1)));
 }

@@ -21,14 +21,20 @@ public class LetterMenu extends AbstractContainerMenu {
     public LetterMenu(int id, Inventory playerInv, ItemStack inventoryStack) {
         super(RookeryMenus.LETTER.get(), id);
         LetterInventory inventory = getStackInventory(inventoryStack);
-        checkContainerSize(inventory, 9);
+        checkContainerSize(inventory, 6);
         this.stackInventory = inventory;
         this.itemStack = inventoryStack;
         inventory.startOpen(playerInv.player);
 
-        for(int i = 0; i < 3; ++i) {
+        for(int i = 1; i < 3; ++i) {
             for(int j = 0; j < 3; ++j) {
-                this.addSlot(new Slot(inventory, j + i * 3, 62 + j * 18, 17 + i * 18));
+                this.addSlot(new Slot(inventory, j + i * 3, 62 + j * 18, 17 + i * 18) {
+
+                    @Override
+                    public boolean mayPlace(ItemStack pStack) {
+                        return !pStack.is(RookeryItems.LETTER.get());
+                    }
+                });
             }
         }
         for (int i = 0; i < 3; ++i) {
