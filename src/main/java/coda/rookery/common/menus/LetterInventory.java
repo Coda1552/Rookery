@@ -5,7 +5,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
-public class LetterInventory  extends SimpleContainer {
+public class LetterInventory extends SimpleContainer {
     private boolean isDirty;
 
     public LetterInventory(int size) {

@@ -36,7 +36,7 @@ public class LetterItem extends Item {
             player.awardStat(Stats.ITEM_USED.get(this));
         }
         else {
-            player.openMenu(new SimpleMenuProvider((windowId, inv, owner) -> new LetterMenu(windowId, inv), itemstack.getDisplayName()));
+            player.openMenu(new SimpleMenuProvider((windowId, inv, owner) -> new LetterMenu(windowId, inv, itemstack), itemstack.getDisplayName()));
             player.awardStat(Stats.ITEM_USED.get(this));
         }
 
@@ -47,7 +47,7 @@ public class LetterItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack stack = player.getItemInHand(pUsedHand);
 
-        player.openMenu(new SimpleMenuProvider((windowId, inv, owner) -> new LetterMenu(windowId, inv), stack.getDisplayName()));
+        player.openMenu(new SimpleMenuProvider((windowId, inv, owner) -> new LetterMenu(windowId, inv, stack), stack.getDisplayName()));
         player.awardStat(Stats.ITEM_USED.get(this));
 
         return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
