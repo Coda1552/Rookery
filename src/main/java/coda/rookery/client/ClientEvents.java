@@ -1,5 +1,7 @@
-package coda.rookery;
+package coda.rookery.client;
 
+import coda.rookery.Rookery;
+import coda.rookery.client.screen.LetterDestinationScreen;
 import coda.rookery.client.screen.LetterScreen;
 import coda.rookery.registry.RookeryMenus;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -12,5 +14,6 @@ public class ClientEvents {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent e) {
         MenuScreens.register(RookeryMenus.LETTER.get(), LetterScreen::new);
+        MenuScreens.register(RookeryMenus.LETTER_DESTINATION.get(), LetterDestinationScreen::new);
     }
 }

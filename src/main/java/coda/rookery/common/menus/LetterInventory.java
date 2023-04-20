@@ -9,7 +9,7 @@ public class LetterInventory  extends SimpleContainer {
     private boolean isDirty;
 
     public LetterInventory() {
-        super(9);
+        super(6);
     }
 
     public boolean isDirty() {

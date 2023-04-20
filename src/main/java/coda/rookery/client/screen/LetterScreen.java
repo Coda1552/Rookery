@@ -43,7 +43,6 @@ public class LetterScreen extends AbstractContainerScreen<LetterMenu> {
         this.name.setResponder(this::onNameChanged);
         this.name.setValue("");
         this.addWidget(this.name);
-        this.setInitialFocus(null);
         this.name.setEditable(false);
     }
 
