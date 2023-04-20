@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 public class LetterInventory  extends SimpleContainer {
     private boolean isDirty;
 
-    public LetterInventory() {
-        super(6);
+    public LetterInventory(int size) {
+        super(size);
     }
 
     public boolean isDirty() {

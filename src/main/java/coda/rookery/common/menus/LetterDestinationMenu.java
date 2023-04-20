@@ -11,19 +11,43 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class LetterDestinationMenu extends AbstractContainerMenu {
+    private final LetterInventory stackInventory;
     private ItemStack itemStack;
 
-    public LetterDestinationMenu(int id, Inventory playerInv) {
+    public LetterDestinationMenu(int id, Inventory inventory) {
+        this(id, inventory, ItemStack.EMPTY);
+    }
+
+    public LetterDestinationMenu(int id, Inventory playerInv, ItemStack inventoryStack) {
         super(RookeryMenus.LETTER_DESTINATION.get(), id);
+        LetterInventory inventory = getStackInventory(inventoryStack);
+        checkContainerSize(inventory, 1);
+        this.stackInventory = inventory;
+        this.itemStack = inventoryStack;
+        inventory.startOpen(playerInv.player);
+
+        this.addSlot(new Slot(inventory, 0, 8, 124));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 146 + i * 18));
+                this.addSlot(new PlayerInventorySlot(playerInv, j + i * 9 + 9, 8 + j * 18, 146 + i * 18));
             }
         }
         for (int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(playerInv, k, 8 + k * 18, 204));
+            this.addSlot(new PlayerInventorySlot(playerInv, k, 8 + k * 18, 204));
         }
+    }
+
+    private static LetterInventory getStackInventory(ItemStack stack) {
+        LetterInventory inventory = new LetterInventory(1);
+        if (!stack.isEmpty() && stack.hasTag()) {
+            ListTag items = stack.getOrCreateTag().getList("Items", 10);
+            for (int i = 0; i < items.size(); i++) {
+                CompoundTag item = items.getCompound(i);
+                inventory.setItem(item.getByte("Slot"), ItemStack.of(item));
+            }
+        }
+        return inventory;
     }
 
     @Override
@@ -73,12 +97,30 @@ public class LetterDestinationMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return player.getInventory().stillValid(player);
+        return stackInventory.stillValid(player);
     }
 
     public void removed(Player player) {
         super.removed(player);
-        player.getInventory().stopOpen(player);
+        this.stackInventory.stopOpen(player);
+        if (!player.level.isClientSide && stackInventory.isDirty()) {
+            stackInventory.write(itemStack);
+        }
     }
 
+    private class PlayerInventorySlot extends Slot {
+        public PlayerInventorySlot(Inventory inventory, int index, int xPosition, int yPosition) {
+            super(inventory, index, xPosition, yPosition);
+        }
+
+        @Override
+        public void set(ItemStack stack) {
+            if (!itemStack.isEmpty() && getItem() == itemStack) {
+                itemStack = ItemStack.EMPTY;
+            } else if (stack.getItem() == RookeryItems.LETTER.get()) {
+                itemStack = stack;
+            }
+            super.set(stack);
+        }
+    }
 }

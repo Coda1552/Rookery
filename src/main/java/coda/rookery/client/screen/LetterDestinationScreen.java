@@ -4,14 +4,21 @@ import coda.rookery.Rookery;
 import coda.rookery.common.menus.LetterDestinationMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+
+import javax.annotation.Nullable;
 
 public class LetterDestinationScreen extends AbstractContainerScreen<LetterDestinationMenu> {
     private static final ResourceLocation INV = new ResourceLocation(Rookery.MOD_ID, "textures/gui/letter_destination.png");
-    private final Component title = Component.translatable("menu.rookery.letter_destination");
 
     public LetterDestinationScreen(LetterDestinationMenu menu, Inventory inv, Component component) {
         super(menu, inv, component);
@@ -47,6 +54,24 @@ public class LetterDestinationScreen extends AbstractContainerScreen<LetterDesti
 
         this.blit(stack, i + 33, j + 14, 0, this.imageHeight, 110, 16);
 
+        Integer integer1 = 19;
+        MapItemSavedData data = MapItem.getSavedData(integer1, this.minecraft.level);
+
+        this.renderResultingMap(stack, integer1, data, true);
+    }
+
+    private void renderResultingMap(PoseStack pPoseStack, @Nullable Integer pMapId, @Nullable MapItemSavedData pMapData, boolean pHasMap) {
+        int i = this.leftPos;
+        int j = this.topPos;
+        if (pHasMap) {
+            RenderSystem.setShaderTexture(0, INV);
+            pPoseStack.pushPose();
+            pPoseStack.translate(0.0D, 0.0D, 1.0D);
+            this.blit(pPoseStack, i + 67, j + 13 + 16, this.imageWidth, 132, 50, 66);
+            this.renderMap(pPoseStack, pMapId, pMapData, i + 29, j + 16, 0.925F);
+            pPoseStack.popPose();
+        }
+
     }
 
     @Override
@@ -64,6 +89,20 @@ public class LetterDestinationScreen extends AbstractContainerScreen<LetterDesti
         }
 
         return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+
+    private void renderMap(PoseStack pPoseStack, @Nullable Integer pMapId, @Nullable MapItemSavedData pMapData, int pX, int pY, float pScale) {
+        if (pMapId != null && pMapData != null) {
+            pPoseStack.pushPose();
+            pPoseStack.translate(pX, pY, 1.0D);
+            pPoseStack.scale(pScale, pScale, 1.0F);
+            MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+            this.minecraft.gameRenderer.getMapRenderer().render(pPoseStack, multibuffersource$buffersource, pMapId, pMapData, true, 15728880);
+            multibuffersource$buffersource.endBatch();
+            pPoseStack.popPose();
+        }
+
     }
 
     @Override

@@ -26,9 +26,9 @@ public class LetterMenu extends AbstractContainerMenu {
         this.itemStack = inventoryStack;
         inventory.startOpen(playerInv.player);
 
-        for(int i = 1; i < 3; ++i) {
+        for(int i = 0; i < 2; ++i) {
             for(int j = 0; j < 3; ++j) {
-                this.addSlot(new Slot(inventory, j + i * 3, 62 + j * 18, 17 + i * 18) {
+                this.addSlot(new Slot(inventory, j + i * 3, 62 + j * 18, 35 + i * 18) {
 
                     @Override
                     public boolean mayPlace(ItemStack pStack) {
@@ -48,7 +48,7 @@ public class LetterMenu extends AbstractContainerMenu {
     }
 
     private static LetterInventory getStackInventory(ItemStack stack) {
-        LetterInventory inventory = new LetterInventory();
+        LetterInventory inventory = new LetterInventory(6);
         if (!stack.isEmpty() && stack.hasTag()) {
             ListTag items = stack.getOrCreateTag().getList("Items", 10);
             for (int i = 0; i < items.size(); i++) {
